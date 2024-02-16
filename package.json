@@ -1,11 +1,15 @@
 {
   "name": "local-blob",
+  "bin": "dist/index.js",
+  "type": "module",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
-    "start": "tsx src/index.ts"
+    "dev": "tsx watch scripts/dev.ts",
+    "build": "tsup",
+    "build:watch": "tsup --watch"
   },
   "dependencies": {
     "@hono/node-server": "^1.7.0",
+    "commander": "^12.0.0",
     "hono": "^4.0.2",
     "mime": "^4.0.1",
     "nanoid": "^5.0.5",
@@ -13,6 +17,8 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.17",
-    "tsx": "^3.12.2"
+    "tsup": "^8.0.2",
+    "tsx": "^3.12.2",
+    "typescript": "^5.3.3"
   }
 }

@@ -2,6 +2,7 @@ import { Stats, existsSync, stat } from "fs";
 import fs from "fs/promises";
 import { tmpdir } from "os";
 import path, { join } from "path";
+import { fileURLToPath } from "url";
 
 export const tmpFolder = join(tmpdir(), "local-blob-storage");
 
@@ -90,3 +91,6 @@ export async function fileStats(path: string) {
   const absolutePath = await getPath(path);
   return await fs.stat(absolutePath);
 }
+
+export const __filename = fileURLToPath(import.meta.url);
+export const __dirname = path.dirname(__filename);

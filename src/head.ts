@@ -1,6 +1,6 @@
 import { Context, Env } from "hono";
 import { BlankInput } from "hono/types";
-import { validator } from "hono/validator";
+import mime from "mime";
 import path from "path";
 import { z } from "zod";
 
@@ -23,9 +23,8 @@ const QuerySchema = z.object({
 
 export async function handleHead(c: Context<Env, "*", BlankInput>) {
   const query = QuerySchema.safeParse(c.req.query());
-
   if (!query.success) {
-    return c.text("Invalid Query param!", 404);
+    return c.text("Invalid Query params!", 404);
   }
 
   const { url } = query.data;
@@ -39,7 +38,7 @@ export async function handleHead(c: Context<Env, "*", BlankInput>) {
   return c.json<HeadBlobResult>({
     cacheControl: "public, max-age=31536000",
     contentDisposition: `inline; filename="${filename}"`,
-    contentType: "application/octet-stream",
+    contentType: mime.getType(filename) ?? "application/octet-stream",
     downloadUrl: url,
     pathname,
     size: stats.size,
