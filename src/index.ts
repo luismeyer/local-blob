@@ -1,42 +1,44 @@
 import { Hono } from "hono";
+import { cors } from "hono/cors";
+import { logger } from "hono/logger";
+import path, { relative } from "path";
 
 import { serve } from "@hono/node-server";
 import { serveStatic } from "@hono/node-server/serve-static";
 
-import { createFile, tmpFolder } from "./fs";
-import { parseHeaders } from "./headers";
-import { createRandomSuffixPath } from "./put";
-import { relative } from "path";
+import { delValidator, handleDel } from "./del";
+import { tmpFolder } from "./fs";
+import { handleHead } from "./head";
+import { handleList } from "./list";
+import { downloadPath, port } from "./public";
+import { handlePut } from "./put";
 
-const app = new Hono();
+export const app = new Hono();
 
-app.use(
-  "/public/*",
+app.use(logger());
+app.use(cors());
+
+app.get(
+  `${downloadPath}*`,
   serveStatic({
     root: relative(__dirname, tmpFolder),
     rewriteRequestPath: (path) => path.replace(/^\/public/, ""),
   })
 );
 
-app.put("*", async (c) => {
-  const pathname = c.req.path.slice(1);
-  const headers = parseHeaders(c.req.header());
+app.get("*", async (c) => {
+  const isHeadRequest = Boolean(c.req.query("url"));
 
-  let filePath = pathname;
-  if (headers.addRandomSuffix) {
-    filePath = createRandomSuffixPath(pathname);
+  if (isHeadRequest) {
+    return handleHead(c);
+  } else {
+    return handleList(c);
   }
-
-  await createFile(filePath, await c.req.arrayBuffer());
-
-  return c.json({ pathname: filePath, url: createUrl(filePath) });
 });
 
-function createUrl(path: string) {
-  return `http://localhost:${port}/public/${path}`;
-}
+app.put("*", handlePut);
+app.post("/delete", delValidator, handleDel);
 
-const port = 8787;
-console.log(`Server is running on port ${port}`);
+console.log(`local-blob: server is running on http://localhost:${port}`);
 
 serve({ fetch: app.fetch, port });
