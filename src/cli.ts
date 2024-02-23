@@ -3,7 +3,7 @@
 import { program } from "commander";
 import { startBlobServer } from "./server";
 import { existsSync } from "fs";
-import { appendFile, readFile, writeFile } from "fs/promises";
+import { appendFile, readFile } from "fs/promises";
 import { join } from "path";
 import { port } from "./public";
 

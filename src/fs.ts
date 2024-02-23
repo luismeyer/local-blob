@@ -29,7 +29,6 @@ export async function createFile(filePath: string, data: ArrayBuffer) {
 
   const dirname = path.dirname(absolutePath);
 
-  console.log(dirname);
   if (!existsSync(dirname)) {
     await fs.mkdir(dirname, { recursive: true });
   }
@@ -59,6 +58,10 @@ export async function listFilesInDirectory(
     for (const relativePath of relativePaths) {
       const stats = await fileStats(absolutePath);
 
+      if (!stats) {
+        continue;
+      }
+
       if (stats.isFile()) {
         result = [...result, { path: relativePath, stats }];
       }
@@ -83,13 +86,18 @@ export async function copyFile(sourcePath: string, destinationPath: string) {
 // Function to delete a file
 export async function deleteFile(filePath: string) {
   const absolutePath = await getPath(filePath);
-  console.log({ absolutePath });
-  await fs.unlink(absolutePath);
+
+  if (existsSync(absolutePath)) {
+    await fs.unlink(absolutePath);
+  }
 }
 
 export async function fileStats(path: string) {
   const absolutePath = await getPath(path);
-  return await fs.stat(absolutePath);
+
+  if (existsSync(absolutePath)) {
+    return fs.stat(absolutePath);
+  }
 }
 
 export const __filename = fileURLToPath(import.meta.url);

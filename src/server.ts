@@ -7,7 +7,7 @@ import { serveStatic } from "@hono/node-server/serve-static";
 
 import { handleCopy } from "./copy";
 import { delValidator, handleDel } from "./del";
-import { tmpFolder, __dirname } from "./fs";
+import { __dirname, tmpFolder } from "./fs";
 import { handleHead } from "./head";
 import { handleList } from "./list";
 import { downloadPath, port } from "./public";

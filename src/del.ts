@@ -40,6 +40,6 @@ export async function handleDel(
       );
     }
   } finally {
-    return c.text("Created!", 200);
+    return c.json("deleted", 200);
   }
 }

@@ -35,6 +35,13 @@ export async function handleHead(c: Context<Env, "*", BlankInput>) {
 
   const stats = await fileStats(pathname);
 
+  if (!stats) {
+    return c.json(
+      { error: { code: "not_found", message: "Blob not found" } },
+      400
+    );
+  }
+
   return c.json<HeadBlobResult>({
     cacheControl: "public, max-age=31536000",
     contentDisposition: `inline; filename="${filename}"`,

@@ -1,11 +1,12 @@
 {
   "name": "local-blob",
-  "bin": "dist/index.js",
   "type": "module",
+  "bin": "dist/index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "dev": "tsx watch scripts/dev.ts",
-    "build": "tsup",
-    "build:watch": "tsup --watch"
+    "build": "pkgroll",
+    "build:watch": "pkgroll --watch",
+    "dev": "tsx watch --clear-screen=false src/cli.ts --debug"
   },
   "dependencies": {
     "@hono/node-server": "^1.7.0",
@@ -17,7 +18,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.17",
-    "tsup": "^8.0.2",
+    "pkgroll": "^2.0.1",
     "tsx": "^3.12.2",
     "typescript": "^5.3.3"
   }
