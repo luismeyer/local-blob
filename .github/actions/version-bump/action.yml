@@ -1,0 +1,5 @@
+name: "Version bump"
+description: "Bumps the version and publishes"
+runs:
+  using: "node20"
+  main: "index.js"
